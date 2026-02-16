@@ -26,35 +26,15 @@ img = xiapi.Image()
 print('Starting data acquisition...')
 cam.start_acquisition()
 
-
-while cv2.waitKey() != ord('q'):
+for i in range(4):
+    #get data and pass them from camera to img
     cam.get_image(img)
     image = img.get_image_data_numpy()
-    image = cv2.resize(image,(240,240))
 
+    cv2.imwrite("img/obrazok" + str(i) + ".png", image)
+    image = cv2.resize(image, (240, 240))
     cv2.imshow("test", image)
-    cv2.waitKey()   
-
-# for i in range(10):
-#     #get data and pass them from camera to img
-#     cam.get_image(img)
-#     image = img.get_image_data_numpy()
-#     cv2.imshow("test", image)
-#     cv2.waitKey()
-#     #get raw data from camera
-#     #for Python2.x function returns string
-#     #for Python3.x function returns bytes
-#     data_raw = img.get_image_data_raw()
-#
-#     #transform data to list
-#     data = list(data_raw)
-#
-#     #print image data and metadata
-#     print('Image number: ' + str(i))
-#     print('Image width (pixels):  ' + str(img.width))
-#     print('Image height (pixels): ' + str(img.height))
-#     print('First 10 pixels: ' + str(data[:10]))
-#     print('\n')
+    cv2.waitKey()
 
 # stop data acquisition
 print('Stopping acquisition...')
@@ -62,5 +42,25 @@ cam.stop_acquisition()
 
 # stop communication
 cam.close_device()
+print('Camera stopped.')
+
+
+
+# loading images
+for i in range(4):
+    pass
+
+
+# print data
+# data_raw = img.get_image_data_raw()
+#
+# #transform data to list
+# data = list(data_raw)
+# print('Image number: ' + str(i))
+# print('Image width (pixels):  ' + str(img.width))
+# print('Image height (pixels): ' + str(img.height))
+# print('First 10 pixels: ' + str(data[:10]))
+# print('\n')
+
 
 print('Done.')
