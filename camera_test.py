@@ -69,6 +69,27 @@ def mosaic():
 
     cv2.imwrite("img/mosaic.png", result)
 
+    kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+    result[0:w, 0:h] = cv2.filter2D(result[0:w, 0:h], -1, kernel, borderType=cv2.BORDER_DEFAULT)
+
+    copy_2_picture = result[0:w, h:2*h].copy()
+    for y in range(w):
+        for x in range(h):
+            rotated_row = x
+            rotated_col = w - 1 - y
+            result[rotated_row, h + rotated_col] = copy_2_picture[y, x]
+
+    copy_3_picture = result[w:2*w, 0:h]
+    copy_3_picture[:,:,0] = 0
+    copy_3_picture[:,:,1] = 0
+
+    print("Image info")
+    print(f"Data type: {result.dtype}")
+    print(f"Dimensions: {result.shape}")
+    print(f"Total size {result.size}")
+
+    cv2.imshow("Mosaic",result)
+
 mosaic()
 # print data
 # data_raw = img.get_image_data_raw()
