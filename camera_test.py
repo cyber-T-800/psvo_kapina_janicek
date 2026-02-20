@@ -1,7 +1,6 @@
 from ximea import xiapi
 import cv2
 import numpy as np
-### runn this command first echo 0|sudo tee /sys/module/usbcore/parameters/usbfs_memory_mb  ###
 
 def photoshoot():
     # create instance for first connected camera
@@ -53,56 +52,62 @@ def photoshoot():
 images = []
 
 # loading images
-for i in range(4):
-    images.append(cv2.imread("img/obrazok" + str(i) + ".png"))
 
 def mosaic():
-    sh = images[0].shape
-    w = sh[0]
-    h = sh[1]
-    result = np.zeros([w * 2, h * 2, 3], dtype=np.uint8)
 
-    result[0:w, 0:h, :] = images[0]
-    result[0:w, h:2*h, :] = images[1]
-    result[w:2*w, 0:h, :] = images[2]
-    result[w:2*w, h:2*h, :] = images[3]
+    # size to which we crop images
+    size = 2000
+
+
+    # load and crop images
+    for i in range(4):
+        im = cv2.imread("img/obrazok" + str(i) + ".png")
+        sh = im.shape
+        h = sh[0]
+        hStart = int((h - size) / 2)
+        w = sh[1]
+        wStart = int((w - size) / 2)
+        images.append(im[hStart:(hStart + size), wStart:(wStart + size), :])
+
+
+    # create mosaic
+    result = np.zeros([size * 2, size * 2, 3], dtype=np.uint8)
+
+    result[0:size, 0:size, :] = images[0]
+    result[0:size, size:2*size, :] = images[1]
+    result[size:2*size, 0:size, :] = images[2]
+    result[size:2*size, size:2*size, :] = images[3]
 
     cv2.imwrite("img/mosaic.png", result)
+
+    # showing mosaic
+    im = cv2.resize(result, (int(size / 5), int(size / 5)))
+    cv2.imshow("mosaic", im)
 
     # Emboss filter, highlights edges to create a 3D effect
     # Negative values (top-left) darken pixels.
     # Positive values (bottom-right) brighten pixels.
     kernel = np.array([[-2, -1, 0], [-1, 1, 1], [0, 1, 2]])
-    result[0:w, 0:h] = cv2.filter2D(result[0:w, 0:h], -1, kernel, borderType=cv2.BORDER_REPLICATE)
+    result[0:size, 0:size] = cv2.filter2D(result[0:size, 0:size], -1, kernel, borderType=cv2.BORDER_REPLICATE)
 
-    copy_2_picture = result[0:w, h:2*h].copy()
-    for y in range(w):
-        for x in range(h):
+    copy_2_picture = result[0:size, size:2*size].copy()
+    for y in range(size):
+        for x in range(size):
             rotated_row = x
-            rotated_col = (w - 1) - y
-            result[rotated_row, h + rotated_col] = copy_2_picture[y, x]
+            rotated_col = (size - 1) - y
+            result[rotated_row, size + rotated_col] = copy_2_picture[y, x]
 
-    result[w:2 * w, 0:h, 0] = 0
-    result[w:2 * w, 0:h, 1] = 0
+    result[w:2 * size, 0:size, 0] = 0
+    result[size:2 * size, 0:size, 1] = 0
 
     print("Image info")
     print(f"Data type: {result.dtype}")
     print(f"Dimensions: {result.shape}")
     print(f"Total size {result.size}")
-
     cv2.imwrite("img/mosaic_after.png", result)
 
 mosaic()
-# print data
-# data_raw = img.get_image_data_raw()
-#
-# #transform data to list
-# data = list(data_raw)
-# print('Image number: ' + str(i))
-# print('Image width (pixels):  ' + str(img.width))
-# print('Image height (pixels): ' + str(img.height))
-# print('First 10 pixels: ' + str(data[:10]))
-# print('\n')
 
+cv2.waitKey()
 
 print('Done.')
