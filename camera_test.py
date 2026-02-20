@@ -97,7 +97,7 @@ def mosaic():
             rotated_col = (size - 1) - y
             result[rotated_row, size + rotated_col] = copy_2_picture[y, x]
 
-    result[w:2 * size, 0:size, 0] = 0
+    result[size:2 * size, 0:size, 0] = 0
     result[size:2 * size, 0:size, 1] = 0
 
     print("Image info")
