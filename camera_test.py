@@ -69,6 +69,9 @@ def mosaic():
 
     cv2.imwrite("img/mosaic.png", result)
 
+    # Emboss filter, highlights edges to create a 3D effect
+    # Negative values (top-left) darken pixels.
+    # Positive values (bottom-right) brighten pixels.
     kernel = np.array([[-2, -1, 0], [-1, 1, 1], [0, 1, 2]])
     result[0:w, 0:h] = cv2.filter2D(result[0:w, 0:h], -1, kernel, borderType=cv2.BORDER_REPLICATE)
 
