@@ -2,7 +2,7 @@ import glob
 
 import cv2 as cv
 import numpy as np
-from ximea import xiapi
+import camera
 
 # termination criteria
 criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
@@ -17,28 +17,7 @@ imgpoints = []  # 2d points in image plane.
 
 images = glob.glob('*.jpg')
 
-cam = xiapi.Camera()
-
-# start communication
-# to open specific device, use:
-# cam.open_device_by_SN('41305651')
-# (open by serial number)
-print('Opening first camera...')
-cam.open_device()
-
-# settings
-cam.set_exposure(50000)
-cam.set_param("imgdataformat", "XI_RGB32")
-cam.set_param("auto_wb", 1)
-
-print('Exposure was set to %i us' % cam.get_exposure())
-
-# create instance of Image to store image data and metadata
-image = xiapi.Image()
-
-# start data acquisitionq
-print('Starting data acquisition...')
-cam.start_acquisition()
+cam, image = camera.set_up_camera()
 
 counter, img_counter = 0, 0
 last = -10
@@ -73,7 +52,7 @@ while True:
         cv.imshow('img', img)
         cv.waitKey(100)
 
-
+        ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
     else:
         print('No chessboard corners found!')
@@ -82,11 +61,5 @@ while True:
 
     counter += 1
 
-# stop data acquisition
-print('Stopping acquisition...')
-cam.stop_acquisition()
-
-# stop communication
-cam.close_device()
-print('Camera stopped.')
+camera.shutdown_camera(cam)
 cv.destroyAllWindows()
