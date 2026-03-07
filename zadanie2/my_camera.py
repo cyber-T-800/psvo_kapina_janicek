@@ -11,7 +11,7 @@ while True:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (7, 7), 1.5)
 
-    edges = cv2.Canny(blurred, 10,  20)
+    edges = cv2.Canny(blurred, 10,  10)
     kernel = np.ones((3, 3), np.uint8)
     edges = cv2.dilate(edges, kernel, iterations=1)
 
@@ -32,7 +32,7 @@ while True:
         if area < 1000: continue
 
         peri = cv2.arcLength(contour, True)
-        approx = cv2.approxPolyDP(contour, 0.115 * peri, True)
+        approx = cv2.approxPolyDP(contour, 0.1 * peri, True)
         num_corners = len(approx)
 
         M = cv2.moments(contour)
