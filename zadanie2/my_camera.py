@@ -1,14 +1,17 @@
 import numpy as np
 import cv2
 
-from zadanie2.camera import shutdown_camera, set_up_camera
+cam = cv2.VideoCapture(0)
 
+while True:
+    ret, frame = cam.read()
+    if not ret:
+        break
 
-def detect_shapes(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (7, 7), 1.5)
 
-    edges = cv2.Canny(blurred, 10, 20)
+    edges = cv2.Canny(blurred, 10,  20)
     kernel = np.ones((3, 3), np.uint8)
     edges = cv2.dilate(edges, kernel, iterations=1)
 
@@ -24,7 +27,6 @@ def detect_shapes(frame):
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
     for contour in contours:
         area = cv2.contourArea(contour)
         if area < 1000: continue
@@ -53,23 +55,8 @@ def detect_shapes(frame):
             cv2.drawContours(frame, [approx], 0, (0, 255, 0), 3)
             cv2.circle(frame, (cX, cY), 2, (0, 0, 255), 3)
             cv2.putText(frame, label, (cX - 20, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-    return frame
 
-cam, img = set_up_camera()
+    cv2.imshow('Detection', frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-try:
-    while True:
-        cam.get_image(img)
-        frame = img.get_image_data_numpy()
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGBA2BGR)
-        processed_frame = detect_shapes(frame)
-        cv2.imshow('XIMEA Úloha 2 - Detekcia', processed_frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-except Exception as e:
-    print(f"Chyba: {e}")
-
-finally:
-    shutdown_camera(cam)
-    cv2.destroyAllWindows()
