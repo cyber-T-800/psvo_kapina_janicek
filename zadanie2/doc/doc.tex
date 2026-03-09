@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\geometry{margin=1in, a4paper}
+
+\title{PSVO Zadanie 1 - dokuementácua}
+\author{Tadeáš Kapina, Radoslav Janíček}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Kalibrácia Kamery}
+
+\subsection{Parametre kamery}
+
+\subsubsection*{Matica vnútorných parametrov kamery}
+\[
+K = \begin{pmatrix}
+600.352 & 0 & 182.412 \\
+0 & 722.178 & 192.004 \\
+0 & 0 & 1
+\end{pmatrix}
+\]
+
+\subsubsection*{Vnútorné parametre kamery}
+\begin{itemize}
+    \item $f_x = 600.352$
+    \item $f_y = 722.178$
+    \item $c_x = 182.412$
+    \item $c_y = 192.004$
+\end{itemize}
+
+\subsubsection*{Disorčné koeficienty}
+\[
+D = \begin{pmatrix}
+-0.399 & -0.417 & 0.001 & 0.003 & 3.403
+\end{pmatrix}
+\]
+
+
+
+\end{document}
