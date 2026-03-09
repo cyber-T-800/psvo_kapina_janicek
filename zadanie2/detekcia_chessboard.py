@@ -115,6 +115,32 @@ def draw(mtx, dist, rvecs, tvecs):
 
         cv.waitKey(0)
 
+def realtimeUndisort(mtx, dist, rvecs, tvecs):
+    cam, image = camera.set_up_camera()
+
+    while True:
+        cam.get_image(image)
+        img = image.get_image_data_numpy()
+        img = cv.resize(img, (400, 400))
+
+        w, h = img.shape[:2]
+        newcameramtx, roi = cv.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
+
+        undst = cv.undistort(img, mtx, dist, None, newcameramtx)
+
+        x, y, w, h = roi
+        undst = undst[y:y + h, x:x + w]
+
+
+        cv.imshow('disorted', img)
+        cv.imshow('undisorted', undst)
+
+        if cv.waitKey(15) == "q":
+            break
+
+    camera.shutdown_camera(cam)
+    cv.destroyAllWindows()
+
 
 ret, mtx, dist, rvecs, tvecs = calibrate()
 
@@ -130,3 +156,5 @@ print('cy:', mtx[1, 2])
 
 print('disorčné paramtre: ')
 print(dist)
+
+realtimeUndisort(mtx, dist, rvecs, tvecs)
