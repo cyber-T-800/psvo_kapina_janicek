@@ -23,17 +23,17 @@ def px_to_cm(pixels):
 
 def detect_shapes(frame):
     # 1. Odstránenie skreslenia šošovky (undistort)
-    frame = cv2.undistort(frame, MTX, DIST, None, MTX)
+    # frame = cv2.undistort(frame, MTX, DIST, None, MTX)
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (7, 7), 1.5)
 
-    edges = cv2.Canny(blurred, 30, 90)
+    edges = cv2.Canny(blurred, 50, 80)
     kernel = np.ones((3, 3), np.uint8)
     edges = cv2.dilate(edges, kernel, iterations=1)
 
-    circles = cv2.HoughCircles(blurred, cv2.HOUGH_GRADIENT, 1, 150,
-                               param1=50, param2=60, minRadius=45, maxRadius=0)
+    circles = cv2.HoughCircles(blurred, cv2.HOUGH_GRADIENT, 1, 100,
+                               param1=50, param2=100, minRadius=0, maxRadius=0)
 
     if circles is not None:
         circles = np.uint16(np.around(circles))
@@ -41,18 +41,15 @@ def detect_shapes(frame):
             # Výpočet priemeru v cm
             diameter_cm = px_to_cm(i[2] * 2)
 
-            cv2.circle(frame, (i[0], i[1]), i[2], (0, 255, 0), 3)
+            cv2.circle(frame, (i[0], i[1]), i[2], (0, 255, 0), 8)
             cv2.putText(frame, f"Circle: {diameter_cm:.1f}cm", (i[0] - 40, i[1]),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 2.0, (255, 255, 255), 5)
 
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     for contour in contours:
-        area = cv2.contourArea(contour)
-        if area < 1000: continue
-
         peri = cv2.arcLength(contour, True)
-        approx = cv2.approxPolyDP(contour, 0.04 * peri, True)
+        approx = cv2.approxPolyDP(contour, 0.02 * peri, True)
         num_corners = len(approx)
 
         M = cv2.moments(contour)
@@ -78,9 +75,9 @@ def detect_shapes(frame):
                 label = f"Rect: {w_cm:.1f}x{h_cm:.1f}cm"
 
         if label:
-            cv2.drawContours(frame, [approx], 0, (0, 255, 0), 3)
-            cv2.circle(frame, (cX, cY), 2, (0, 0, 255), 3)
-            cv2.putText(frame, label, (cX - 50, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            cv2.drawContours(frame, [approx], 0, (0, 255, 0), 8)
+            cv2.circle(frame, (cX, cY), 6, (0, 0, 255), -1)
+            cv2.putText(frame, label, (cX - 50, cY), cv2.FONT_HERSHEY_SIMPLEX, 2.0, (255, 255, 255), 5)
 
     return frame
 
@@ -93,7 +90,8 @@ try:
         frame = cv2.cvtColor(frame, cv2.COLOR_RGBA2BGR)
 
         processed_frame = detect_shapes(frame)
-        cv2.imshow('XIMEA Úloha 2 - Detekcia a Meranie', processed_frame)
+        img = cv2.resize(processed_frame, (400, 400))
+        cv2.imshow('Detection', img)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

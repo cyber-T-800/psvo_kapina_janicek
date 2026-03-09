@@ -7,7 +7,8 @@ def set_up_camera():
     cam.open_device()
 
     # settings
-    cam.set_exposure(50000)
+    cam.set_exposure(30000)
+
     cam.set_param("imgdataformat", "XI_RGB32")
     cam.set_param("auto_wb", 1)
 
