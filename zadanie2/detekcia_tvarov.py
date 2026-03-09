@@ -2,12 +2,11 @@ import numpy as np
 import cv2
 from camera import shutdown_camera, set_up_camera
 
-# --- KONŠTANTY Z KALIBRÁCIE --- todo
-MTX = np.array([[2.234e+03, 0.000e+00, 2.012e+02],
-                [0.000e+00, 2.235e+03, 2.105e+02],
-                [0.000e+00, 0.000e+00, 1.000e+00]], dtype=np.float32)
+MTX = np.array([[600.35201553,   0.,         182.41220667],
+                   [  0.,         722.17797944, 192.00406333],
+                   [  0.,           0.,           1.        ]], dtype=np.float32)
 
-DIST = np.array([-0.2, 0.1, 0, 0, 0], dtype=np.float32)  # 'dist' hodnoty todo
+DIST = np.array([-3.98597311e-01, -4.17022141e-01,  1.09488369e-03,  3.39626032e-03, 3.40320106e+00], dtype=np.float32)  # 'dist' hodnoty todo
 
 # Fyzicky odmeraná vzdialenosť kamery od podložky v cm
 Z_DIST_CM = 40.0
