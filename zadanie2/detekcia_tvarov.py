@@ -26,14 +26,10 @@ def detect_shapes(frame):
     # frame = cv2.undistort(frame, MTX, DIST, None, MTX)
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (7, 7), 1.5)
-
-    edges = cv2.Canny(blurred, 50, 80)
-    kernel = np.ones((3, 3), np.uint8)
-    edges = cv2.dilate(edges, kernel, iterations=1)
+    blurred = cv2.medianBlur(gray, 5)
 
     circles = cv2.HoughCircles(blurred, cv2.HOUGH_GRADIENT, 1, 100,
-                               param1=50, param2=100, minRadius=0, maxRadius=0)
+                               param1=50, param2=100, minRadius=0, maxRadius=0) # todo
 
     if circles is not None:
         circles = np.uint16(np.around(circles))
@@ -45,6 +41,7 @@ def detect_shapes(frame):
             cv2.putText(frame, f"Circle: {diameter_cm:.1f}cm", (i[0] - 40, i[1]),
                         cv2.FONT_HERSHEY_SIMPLEX, 2.0, (255, 255, 255), 5)
 
+    edges = cv2.Canny(blurred, 100, 200) # todo
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     for contour in contours:
