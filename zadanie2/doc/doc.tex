@@ -17,6 +17,13 @@
 
 \section{Kalibrácia Kamery}
 
+Kalibrácia kamery prebehla podľa oficiálneho návodu OpenCV. Nasnímali sme 22 snímok šachovnice, na ktorých prebehla kalibrácia. 
+Snímky sme nasnímali pred samotným kalibračným procesom a uložili ich do priečinka - snímky sme ukladali iba keď na nich OpenCV dokázal rozoznať šachovnicu. 
+
+Následne sme použili funkciu \texttt{cv.findChessboardCorners()} na nájdenie rohov a následne \texttt{cv.cornerSubPix()}, ktorá slúži na spresnenie detektie.
+
+Nakoniec sme použili funkciu \texttt{cv2.calibrateCamera()} na získanie matice vnútorných parametrov kamery a disorčných koeficientov.
+
 \subsection{Parametre kamery}
 
 \subsubsection*{Matica vnútorných parametrov kamery}
@@ -43,6 +50,40 @@ D = \begin{pmatrix}
 \end{pmatrix}
 \]
 
+\section{Detekcia geometrických tvarov}
 
+
+\subsection{Použité metódy}
+
+Na detekciu základných geometrických tvarov v obraze boli využité metódy a funkcie z knižnice OpenCV:
+
+\begin{itemize}
+    \item \textbf{Detekcia kružníc:} Využíva sa Houghova transformácia na hľadanie kruhov (\texttt{cv2.HoughCircles}). Metóda sa aplikuje na obraz, ktorý bol najprv prevedený do odtieňov sivej a vyhladený mediánovým filtrom pre zníženie šumu.
+    \item \textbf{Detekcia polygónov (štvorce, obdĺžniky, trojuholníky):}
+    \begin{itemize}
+        \item Na nájdenie hrán v obraze je použitý Cannyho detektor hrán (\texttt{cv2.Canny}).
+        \item Následne program hľadá spojené oblasti (kontúry) pomocou funkcie \texttt{cv2.findContours}.
+        \item Nájdené kontúry sú aproximované pomocou \texttt{cv2.approxPolyDP} na zistenie počtu vrcholov (napríklad 3 vrcholy pre trojuholník, 4 pre štvorec alebo obdĺžnik).
+    \end{itemize}
+    \item \textbf{Určenie ťažiska:} Stred (ťažisko) každého detegovaného tvaru sa vypočítava z obrazových momentov pomocou funkcie \texttt{cv2.moments}.
+\end{itemize}
+
+\subsection{Postup riešenia}
+
+Postup spracovania obrazu a detekcie tvarov funguje nasledovne:
+
+\begin{enumerate}
+    \item Program v nekonečnej slučke načítava obraz z kamery.
+    \item Snímka sa konvertuje do grayscale formátu a filtruje sa, aby sa pripravila na detekciu.
+    \item Pre zabezpečenie robustnosti voči rôznym svetelným podmienkam a scénam program obsahuje grafické rozhranie s posuvníkmi (Trackbars). Tieto umožňujú používateľovi v reálnom čase ladiť prahy pre Cannyho detektor, parametre Houghovej transformácie, úroveň aproximácie a minimálnu plochu objektov.
+    \item Ak program deteguje tvar, graficky ho v reálnom obraze označí (vykreslí obrys zelenou farbou).
+    \item Do stredu tvaru sa vykreslí červený bod, ktorý reprezentuje jeho ťažisko.
+    \item Ku každému rozpoznanému tvaru program pridá textovú menovku s jeho názvom v reálnom čase (napr. \texttt{Tri}, \texttt{Square}, \texttt{Rect}, \texttt{Circle}).
+\end{enumerate}
+
+
+\section{Farebný filter}
+
+Pre zmenu jednej farby na iný sme najskr zmenili farebný priestor z RGB na HSV pomocou funkcie \texttt{cv2.cvtColor}. Následne sme použili funkciu \texttt{cv2.inRange} na vytvorenie masky, ktorá vyberá pixely v zadanom rozsahu farieb v HSV priestore. Nakoniec sme všekty pixely, ktoré patrili do masky zmenili na požadovanú farbu.
 
 \end{document}

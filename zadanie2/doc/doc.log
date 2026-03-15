@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10) (preloaded format=pdflatex 2023.12.30)  9 MAR 2026 15:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10) (preloaded format=pdflatex 2023.12.30)  15 MAR 2026 15:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -258,9 +258,16 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 (C:\Users\tadea\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
 fg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
-)) [1
+))
+Overfull \hbox (43.5306pt too wide) in paragraph at lines 23--24
+[]\OT1/cmr/m/n/10 N^^Sasledne sme pou^^Tzili funkciu \OT1/cmtt/m/n/10 cv.findCh
+essboardCorners() \OT1/cmr/m/n/10 na n^^Sajdenie ro-hov a n^^Sasledne \OT1/cmtt
+/m/n/10 cv.cornerSubPix()\OT1/cmr/m/n/10 ,
+ []
 
-{C:/Users/tadea/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+[1
+
+{C:/Users/tadea/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2]
 (doc.aux)
  ***********
 LaTeX2e <2023-06-01> patch level 1
@@ -268,13 +275,13 @@ L3 programming layer <2023-08-29>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3648 strings out of 475248
- 59776 string characters out of 5757812
- 1923785 words of memory out of 5000000
- 25154 multiletter control sequences out of 15000+600000
- 563787 words of font info for 56 fonts, out of 8000000 for 9000
+ 3656 strings out of 475248
+ 59892 string characters out of 5757812
+ 1930785 words of memory out of 5000000
+ 25161 multiletter control sequences out of 15000+600000
+ 563955 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,7n,65p,222b,208s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,7n,65p,380b,208s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\tadea\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
 1000.pk><C:/Users/tadea/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
 ts/cm/cmbx10.pfb><C:/Users/tadea/AppData/Local/Programs/MiKTeX/fonts/type1/publ
@@ -286,10 +293,11 @@ al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/tadea/App
 Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/t
 adea/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:
 /Users/tadea/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy1
-0.pfb>
-Output written on doc.pdf (1 page, 107786 bytes).
+0.pfb><C:/Users/tadea/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmtt10.pfb>
+Output written on doc.pdf (2 pages, 137064 bytes).
 PDF statistics:
- 56 PDF objects out of 1000 (max. 8388607)
+ 64 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
