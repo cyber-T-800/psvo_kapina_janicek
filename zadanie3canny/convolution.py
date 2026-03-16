@@ -7,8 +7,8 @@ def convolve(img, kernel):
             for i in range(kernel.shape[0]):
                 for j in range(kernel.shape[1]):
                     try:
-                        value += img[x - 2 + i][y - 2 + j] * kernel[i][j]
+                        value += img[x - int(kernel.shape[0] / 2) + i][y - int(kernel.shape[1] / 2) + j] * kernel[i][j]
                     except:
                         pass
-            res[x, y] = int(value)
+            res[x, y] = int(min(255, max(0, value)))
     return res
