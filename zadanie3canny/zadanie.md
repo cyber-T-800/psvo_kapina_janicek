@@ -8,3 +8,7 @@ Implementujte zjednodušený Canny detektor pozostávajúci z:
 - hysterézie.
 
 Výsledok porovnajte s OpenCV funkciou Canny.
+
+
+princíp OpenCV canny:
+https://docs.opencv.org/3.4/da/d22/tutorial_py_canny.html
