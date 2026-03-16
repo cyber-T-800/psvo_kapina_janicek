@@ -4,6 +4,7 @@
 \usepackage{geometry}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{float}
 
 \geometry{margin=1in, a4paper}
 
@@ -50,6 +51,17 @@ D = \begin{pmatrix}
 \end{pmatrix}
 \]
 
+
+\subsection{Demonštrácia na reálnom obraze}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{undisortion_demonstacia.png}
+    \caption{Vľavo: pôvodný obraz, vpravo: obraz po odstránení disorzie (\texttt{cv2.undistort})}
+\end{figure}
+
+
+\newpage
 \section{Detekcia geometrických tvarov}
 
 
@@ -81,9 +93,25 @@ Postup spracovania obrazu a detekcie tvarov funguje nasledovne:
     \item Ku každému rozpoznanému tvaru program pridá textovú menovku s jeho názvom v reálnom čase (napr. \texttt{Tri}, \texttt{Square}, \texttt{Rect}, \texttt{Circle}).
 \end{enumerate}
 
+\subsection{Demonštrácia na reálnom obraze}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{detekcia_tvarov_demonstacia.png}
+    \caption{Demonštrácia detekcie geometrických tvarov.}
+\end{figure}
+
+\newpage
 \section{Farebný filter}
 
-Pre zmenu jednej farby na iný sme najskr zmenili farebný priestor z RGB na HSV pomocou funkcie \texttt{cv2.cvtColor}. Následne sme použili funkciu \texttt{cv2.inRange} na vytvorenie masky, ktorá vyberá pixely v zadanom rozsahu farieb v HSV priestore. Nakoniec sme všekty pixely, ktoré patrili do masky zmenili na požadovanú farbu.
+Pre zmenu jednej farby na iný sme najskôr zmenili farebný priestor z pôvodného RGB z kamery na HSV pomocou funkcie \texttt{cv2.cvtColor}. Následne sme použili funkciu \texttt{cv2.inRange} na vytvorenie masky, ktorá vyberá pixely v zadanom rozsahu farieb v HSV priestore. Nakoniec sme všetky pixely, ktoré patrili do masky, zmenili na požadovanú farbu.
+
+\subsection{Demonštrácia na reálnom obraze}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{filter_demonstacia.png}
+    \caption{Demonštrácia farebného filtra. Vľavo: pôvodný obraz, vpravo: obraz po aplikovaní farebného filtra.}
+\end{figure}
 
 \end{document}
