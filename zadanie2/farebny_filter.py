@@ -19,7 +19,7 @@ while True:
     # lower_white = np.array([0,0,235])
     # upper_white = np.array([255,255,255])
 
-    lower_red = np.array([0, 100, 100])
+    lower_red = np.array([0, 50, 50])
     upper_red = np.array([20, 255, 255])
 
     #mask = cv.inRange(hsv, lower_blue, upper_blue)
