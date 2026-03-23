@@ -1,4 +1,4 @@
-from random import gauss
+from math import atan
 
 import numpy as np
 import cv2 as cv
@@ -28,13 +28,30 @@ Gy = np.array([[ 1,  2,  1],
                [ 0,  0,  0],
                [-1, -2, -1]])
 
-imgHranyX = conv.convolve(img, Gx)
-imgHranyY = conv.convolve(img, Gy)
+imgHranyX = conv.convolve(img.astype(np.int16), Gx)
+imgHranyY = conv.convolve(img.astype(np.int16), Gy)
 
+edgeGradient = np.sqrt(np.power(imgHranyX, 2) + np.power(imgHranyY, 2))
+edgeGradient[np.isnan(edgeGradient)] = 0
 
-cv.imshow('imageX', imgHranyX)
-cv.imshow('imageY', imgHranyY)
+gAngle = np.atan(imgHranyY / imgHranyX)
+gAngle[np.isnan(gAngle)] = 0
+
+gDirection = np.round(gAngle * 8 / np.pi)
+gDirection[gDirection < 0] = 4 + gDirection[gDirection < 0]
+gDirection[gDirection == 4] = 0
+gDirection = gDirection.astype(np.int8)
+
+# print(np.min(edgeGradient).astype(np.uint8), np.max(edgeGradient).astype(np.uint8))
+# print(np.min(gAngle), np.max(gAngle))
+# print(np.min(gDirection), np.max(gDirection))
+#
+# cv.imshow('edgeGradient', edgeGradient)
+# cv.imshow('gAndle', gAngle)
+# cv.imshow('gDirection', gDirection /3*255)
+
 cv.waitKey()
+
 
 # todo Non-maximum Suppression
 

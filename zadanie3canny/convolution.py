@@ -1,6 +1,7 @@
 def convolve(img, kernel):
     res = img.copy()
 
+
     for x in range(img.shape[0]):
         for y in range(img.shape[1]):
             value = 0
@@ -10,5 +11,6 @@ def convolve(img, kernel):
                         value += img[x - int(kernel.shape[0] / 2) + i][y - int(kernel.shape[1] / 2) + j] * kernel[i][j]
                     except:
                         pass
-            res[x, y] = int(min(255, max(0, value)))
+            res[x, y] = int(value)
+            #res[x, y] = int(min(255, max(0, value)))
     return res
