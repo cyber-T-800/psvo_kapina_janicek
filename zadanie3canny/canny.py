@@ -1,11 +1,12 @@
-from math import atan
-
 import numpy as np
 import cv2 as cv
 import convolution as conv
 
-image = cv.imread('messi.png', cv.IMREAD_GRAYSCALE)
-image = cv.resize(image, (400, 400))
+image = cv.imread('img.png', cv.IMREAD_GRAYSCALE)
+#image = cv.resize(image, (400, 300))
+
+can = cv.Canny(image, 100, 200)
+cv.imshow('canny', can)
 
 #gaus
 gauss = np.array([
@@ -18,7 +19,6 @@ gauss = np.array([
 
 img = conv.convolve(image, gauss)
 
-
 # gradient
 Gx = np.array([[-1, 0, 1],
                [-2, 0, 2],
@@ -28,33 +28,28 @@ Gy = np.array([[ 1,  2,  1],
                [ 0,  0,  0],
                [-1, -2, -1]])
 
-imgHranyX = conv.convolve(img.astype(np.int16), Gx)
-imgHranyY = conv.convolve(img.astype(np.int16), Gy)
+imgHranyX = conv.convolve(img.astype(np.float32), Gx)
+imgHranyY = conv.convolve(img.astype(np.float32), Gy)
 
-edgeGradient = np.sqrt(np.power(imgHranyX, 2) + np.power(imgHranyY, 2))
+edgeGradient = np.hypot(imgHranyX, imgHranyY)
 edgeGradient[np.isnan(edgeGradient)] = 0
+print(np.max(edgeGradient))
 
-gAngle = np.atan(imgHranyY / imgHranyX)
+edgeGradient = edgeGradient / np.max(edgeGradient) * 255
+edgeGradient = edgeGradient.astype(np.uint8)
+
+imgHranyX[imgHranyX == 0] = 0.000001
+gAngle = np.atan2(imgHranyY, imgHranyX)
 gAngle[np.isnan(gAngle)] = 0
 
-gDirection = np.round(gAngle * 8 / np.pi)
-gDirection[gDirection < 0] = 4 + gDirection[gDirection < 0]
-gDirection[gDirection == 4] = 0
-gDirection = gDirection.astype(np.int8)
+gAngle = gAngle * 180 / np.pi
+gAngle[gAngle < 0] = 180 + gAngle[gAngle < 0]
 
-# print(np.min(edgeGradient).astype(np.uint8), np.max(edgeGradient).astype(np.uint8))
-# print(np.min(gAngle), np.max(gAngle))
-# print(np.min(gDirection), np.max(gDirection))
-#
-# cv.imshow('edgeGradient', edgeGradient)
-# cv.imshow('gAndle', gAngle)
-# cv.imshow('gDirection', gDirection /3*255)
 
 def non_max_suppression(magnitude, angle_matrix):
     M, N = magnitude.shape
     Z = np.zeros((M, N), dtype=np.float32)
 
-# todo Hysteresis Thresholding
     for i in range(1, M - 1):
         for j in range(1, N - 1):
             q = 255
@@ -77,12 +72,11 @@ def non_max_suppression(magnitude, angle_matrix):
                 Z[i, j] = magnitude[i, j]
             else:
                 Z[i, j] = 0
-    return Z
+    return Z.astype(np.uint8)
 
 
 img_nms = non_max_suppression(edgeGradient, gAngle)
 
-# todo Double thresholding
 def double_threshold(img, low_ratio=0.05, high_ratio=0.15):
     high_thresh = img.max() * high_ratio
     low_thresh = high_thresh * low_ratio
@@ -105,7 +99,6 @@ def double_threshold(img, low_ratio=0.05, high_ratio=0.15):
 
 img_thresh, weak_val, strong_val = double_threshold(img_nms)
 
-# todo Hysteresis Thresholding
 def hysteresis(img, weak, strong=255):
     M, N = img.shape
     out = img.copy()
@@ -123,6 +116,8 @@ def hysteresis(img, weak, strong=255):
 
 
 img_final = hysteresis(img_thresh, weak_val, strong_val)
+
+
 
 cv.imshow('Finalny Canny (Vlastny)', img_final)
 cv.waitKey()
