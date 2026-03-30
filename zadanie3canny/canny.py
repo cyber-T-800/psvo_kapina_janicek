@@ -1,13 +1,22 @@
+import time
+
 import numpy as np
 import cv2 as cv
 import convolution as conv
 
-image = cv.imread('img.png', cv.IMREAD_GRAYSCALE)
-#image = cv.resize(image, (400, 300))
+image = cv.imread('messi.png', cv.IMREAD_GRAYSCALE)
 
+
+start = time.time()
 can = cv.Canny(image, 100, 200)
+end = time.time()
+cv.imwrite('prezentacia/img_c_3.png', can)
+
+print("canny elapsed time: ", end - start)
 cv.imshow('canny', can)
 
+
+start = time.time()
 #gaus
 gauss = np.array([
     [0.002969, 0.013306, 0.021938, 0.013306, 0.002969],
@@ -33,7 +42,6 @@ imgHranyY = conv.convolve(img.astype(np.float32), Gy)
 
 edgeGradient = np.hypot(imgHranyX, imgHranyY)
 edgeGradient[np.isnan(edgeGradient)] = 0
-print(np.max(edgeGradient))
 
 edgeGradient = edgeGradient / np.max(edgeGradient) * 255
 edgeGradient = edgeGradient.astype(np.uint8)
@@ -77,7 +85,7 @@ def non_max_suppression(magnitude, angle_matrix):
 
 img_nms = non_max_suppression(edgeGradient, gAngle)
 
-def double_threshold(img, low_ratio=0.05, high_ratio=0.15):
+def double_threshold(img, low_ratio=0.25, high_ratio=0.18):
     high_thresh = img.max() * high_ratio
     low_thresh = high_thresh * low_ratio
 
@@ -116,6 +124,11 @@ def hysteresis(img, weak, strong=255):
 
 
 img_final = hysteresis(img_thresh, weak_val, strong_val)
+
+
+end = time.time()
+print("vlastny canny elapsed time: ", end - start)
+cv.imwrite('prezentacia/img_f_3.png', img_final)
 
 
 
